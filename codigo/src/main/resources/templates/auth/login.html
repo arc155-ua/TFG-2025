@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title},~{::content})">
+<head>
+    <title>Iniciar Sesión - CalorieTracker</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div class="auth-container">
+            <h2 class="text-center mb-4">Iniciar Sesión</h2>
+            
+            <div th:if="${param.registered}" class="alert alert-success">
+                ¡Registro exitoso! Por favor inicia sesión.
+            </div>
+            
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}">
+                Error de autenticación
+            </div>
+            
+            <form th:action="@{/auth/login}" method="post" th:object="${userLogin}">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                    <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="contraseña" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="contraseña" th:field="*{contraseña}" required>
+                    <div class="text-danger" th:if="${#fields.hasErrors('contraseña')}" th:errors="*{contraseña}"></div>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                </div>
+            </form>
+            
+            <div class="text-center mt-3">
+                <p>¿No tienes una cuenta? <a th:href="@{/auth/register}">Regístrate</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
