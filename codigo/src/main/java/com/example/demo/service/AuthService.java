@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.UserLoginDto;
-import com.example.demo.dto.UserRegistrationDto;
+import com.example.demo.dto.UserLoginDTO;
+import com.example.demo.dto.UserRegistrationDTO;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public User register(UserRegistrationDto registrationDto) {
+    public User register(UserRegistrationDTO registrationDto) {
         // Verificar si el email ya existe
         if (userRepository.findByEmail(registrationDto.getEmail()).isPresent()) {
             throw new RuntimeException("El email ya está registrado");
@@ -31,7 +31,7 @@ public class AuthService {
         User user = new User();
         user.setNombre(registrationDto.getNombre());
         user.setEmail(registrationDto.getEmail());
-        user.setContraseñaHash(passwordEncoder.encode(registrationDto.getContraseña()));
+        user.setContraseñaHash(passwordEncoder.encode(registrationDto.getPassword()));
         user.setEdad(registrationDto.getEdad());
         user.setPesoKg(registrationDto.getPesoKg());
         user.setAlturaCm(registrationDto.getAlturaCm());
@@ -46,9 +46,9 @@ public class AuthService {
         return userRepository.save(user);
     }
 
-    public User login(UserLoginDto loginDto) {
+    public User login(UserLoginDTO loginDto) {
         return userRepository.findByEmail(loginDto.getEmail())
-                .filter(user -> passwordEncoder.matches(loginDto.getContraseña(), user.getContraseñaHash()))
+                .filter(user -> passwordEncoder.matches(loginDto.getPassword(), user.getContraseñaHash()))
                 .orElseThrow(() -> new RuntimeException("Email o contraseña incorrectos"));
     }
 

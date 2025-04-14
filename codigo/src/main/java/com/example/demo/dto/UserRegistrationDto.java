@@ -1,12 +1,10 @@
 package com.example.demo.dto;
 
 import lombok.Data;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
-public class UserRegistrationDto {
+public class UserRegistrationDTO {
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
 
@@ -16,12 +14,26 @@ public class UserRegistrationDto {
 
     @NotBlank(message = "La contraseña es obligatoria")
     @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
-    private String contraseña;
+    private String password;
 
+    @NotNull(message = "La edad es obligatoria")
+    @Min(value = 1, message = "La edad debe ser mayor que 0")
     private Integer edad;
+
+    @NotNull(message = "El peso es obligatorio")
+    @Min(value = 1, message = "El peso debe ser mayor que 0")
     private Double pesoKg;
+
+    @NotNull(message = "La altura es obligatoria")
+    @Min(value = 1, message = "La altura debe ser mayor que 0")
     private Double alturaCm;
+
+    @NotBlank(message = "El género es obligatorio")
     private String genero;
+
+    @NotBlank(message = "El nivel de actividad es obligatorio")
     private String nivelActividad;
+
+    @NotBlank(message = "El objetivo es obligatorio")
     private String objetivo;
 } 

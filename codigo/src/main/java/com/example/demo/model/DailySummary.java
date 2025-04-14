@@ -2,11 +2,15 @@ package com.example.demo.model;
 
 import javax.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "daily_summary")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "daily_summaries")
 public class DailySummary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +24,8 @@ public class DailySummary {
     private LocalDate fecha;
 
     @Column(name = "calorias_totales")
-    private Double caloriasTotales;
+    private double caloriasTotales;
 
-    @Column(name = "calorias_objetivo")
-    private Double caloriasObjetivo;
+    @Column(name = "calorias_meta")
+    private Integer caloriasMeta;
 } 

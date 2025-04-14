@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/base :: html(~{::title},~{::content})">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
 <head>
     <title>Registro - CalorieTracker</title>
 </head>
 <body>
-    <div th:fragment="content">
+    <div layout:fragment="content">
         <div class="auth-container">
             <h2 class="text-center mb-4">Registro de Usuario</h2>
             
@@ -12,7 +12,7 @@
                 Error en el registro
             </div>
             
-            <form th:action="@{/auth/register}" method="post" th:object="${userRegistration}">
+            <form th:action="@{/auth/register}" method="post" th:object="${user}">
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required>
@@ -26,9 +26,9 @@
                 </div>
                 
                 <div class="mb-3">
-                    <label for="contraseña" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="contraseña" th:field="*{contraseña}" required>
-                    <div class="text-danger" th:if="${#fields.hasErrors('contraseña')}" th:errors="*{contraseña}"></div>
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" th:field="*{password}" required>
+                    <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                 </div>
                 
                 <div class="mb-3">

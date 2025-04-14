@@ -1,14 +1,17 @@
 com\example\demo\dto\FoodDTO.class
 com\example\demo\DemoApplication.class
+com\example\demo\service\UserService.class
 com\example\demo\dto\DailySummaryDTO.class
-com\example\demo\controller\web\AuthWebController.class
-com\example\demo\dto\UserLoginDto.class
 com\example\demo\repository\UserRepository.class
 com\example\demo\model\DailySummary.class
-com\example\demo\controller\AuthController.class
+com\example\demo\service\DailySummaryService.class
 com\example\demo\repository\FoodRepository.class
+com\example\demo\controller\web\UserController.class
+com\example\demo\controller\web\AuthController.class
 com\example\demo\service\AuthService.class
 madstodolist\authentication\ManagerUserSession.class
+com\example\demo\dto\UserRegistrationDTO.class
+com\example\demo\service\CustomUserDetailsService.class
 com\example\demo\model\Food.class
 com\example\demo\repository\MealEntryRepository.class
 com\example\demo\model\User.class
@@ -17,5 +20,5 @@ com\example\demo\config\SecurityConfig.class
 com\example\demo\controller\HomeController.class
 com\example\demo\model\MealEntry.class
 com\example\demo\repository\DailySummaryRepository.class
-com\example\demo\dto\UserRegistrationDto.class
+com\example\demo\dto\UserLoginDTO.class
 com\example\demo\dto\UserDTO.class
