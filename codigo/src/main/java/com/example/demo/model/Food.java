@@ -15,6 +15,8 @@ public class Food {
     private String nombre;
 
     private String marca;
+
+    @Column(length = 1000)
     private String categoria;
     
     @Column(name = "calorias_100g")

@@ -19,6 +19,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CalorieCalculatorService calorieCalculatorService;
+
     @Transactional
     public User save(User user) {
         if (user.getContraseñaHash() != null) {
@@ -27,6 +30,10 @@ public class UserService {
         if (user.getFechaCreacion() == null) {
             user.setFechaCreacion(LocalDateTime.now());
         }
+        
+        // Calcular calorías meta diaria usando la fórmula de Mifflin-St Jeor (más precisa)
+        user.setCaloriasMetaDiaria(calorieCalculatorService.calculateCalories(user, CalorieCalculatorService.Formula.MIFFLIN_ST_JEOR));
+        
         return userRepository.save(user);
     }
 
@@ -36,5 +43,25 @@ public class UserService {
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Transactional
+    public User updateUserProfile(User user) {
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        // Actualizar campos básicos
+        existingUser.setNombre(user.getNombre());
+        existingUser.setEdad(user.getEdad());
+        existingUser.setPesoKg(user.getPesoKg());
+        existingUser.setAlturaCm(user.getAlturaCm());
+        existingUser.setGenero(user.getGenero());
+        existingUser.setNivelActividad(user.getNivelActividad());
+        existingUser.setObjetivo(user.getObjetivo());
+        
+        // Recalcular calorías meta diaria
+        existingUser.setCaloriasMetaDiaria(calorieCalculatorService.calculateCalories(existingUser, CalorieCalculatorService.Formula.MIFFLIN_ST_JEOR));
+        
+        return userRepository.save(existingUser);
     }
 } 

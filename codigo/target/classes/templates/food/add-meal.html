@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title>Añadir Comida - CalorieTracker</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Añadir Comida</h2>
+                <a th:href="@{/food/search}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Volver a la búsqueda
+                </a>
+            </div>
+
+            <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>Información del Alimento</h5>
+                        </div>
+                        <div class="card-body">
+                            <h5 th:text="${food.nombre}">Nombre del Alimento</h5>
+                            <p th:if="${food.marca}" th:text="${'Marca: ' + food.marca}">Marca</p>
+                            <p th:if="${food.categoria}" th:text="${'Categoría: ' + food.categoria}">Categoría</p>
+                            
+                            <div class="mt-3">
+                                <h6>Información Nutricional (por 100g)</h6>
+                                <ul class="list-unstyled">
+                                    <li th:if="${food.calorias100g != null}">
+                                        <strong>Calorías:</strong> <span th:text="${#numbers.formatDecimal(food.calorias100g, 1, 1)}">0</span> kcal
+                                    </li>
+                                    <li th:if="${food.proteinas != null}">
+                                        <strong>Proteínas:</strong> <span th:text="${#numbers.formatDecimal(food.proteinas, 1, 1)}">0</span>g
+                                    </li>
+                                    <li th:if="${food.carbohidratos != null}">
+                                        <strong>Carbohidratos:</strong> <span th:text="${#numbers.formatDecimal(food.carbohidratos, 1, 1)}">0</span>g
+                                    </li>
+                                    <li th:if="${food.grasas != null}">
+                                        <strong>Grasas:</strong> <span th:text="${#numbers.formatDecimal(food.grasas, 1, 1)}">0</span>g
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Añadir a mi Diario</h5>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/food/add/{id}(id=${food.id})}" method="post" th:object="${mealEntry}" class="needs-validation" novalidate>
+                                <div class="mb-3">
+                                    <label for="comidaTipo" class="form-label">Tipo de Comida</label>
+                                    <select class="form-select" id="comidaTipo" th:field="*{comidaTipo}" required>
+                                        <option value="">Selecciona...</option>
+                                        <option value="desayuno">Desayuno</option>
+                                        <option value="almuerzo">Almuerzo</option>
+                                        <option value="cena">Cena</option>
+                                        <option value="snack">Snack</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="cantidadG" class="form-label">Cantidad (gramos)</label>
+                                    <input type="number" class="form-control" id="cantidadG" th:field="*{cantidadG}" required min="1" step="1">
+                                    <div class="form-text">
+                                        Las calorías y nutrientes se calcularán automáticamente según la cantidad.
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="notas" class="form-label">Notas (opcional)</label>
+                                    <textarea class="form-control" id="notas" th:field="*{notas}" rows="2"></textarea>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-plus-circle"></i> Añadir a mi Diario
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block layout:fragment="scripts">
+        <script>
+            // Validación del formulario
+            (function () {
+                'use strict'
+                var forms = document.querySelectorAll('.needs-validation')
+                Array.prototype.slice.call(forms).forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+            })()
+        </script>
+    </th:block>
+</body>
+</html> 

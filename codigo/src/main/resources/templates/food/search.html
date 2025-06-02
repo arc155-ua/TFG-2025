@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title>Buscar Alimentos - CalorieTracker</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <h2 class="mb-4">Buscar Alimentos</h2>
+
+            <div class="card">
+                <div class="card-body">
+                    <form th:action="@{/food/search/results}" method="get" class="mb-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="query" placeholder="Buscar alimentos..." required>
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-search"></i> Buscar
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">¿Cómo funciona?</h5>
+                        <p class="mb-0">
+                            Puedes buscar alimentos por nombre, marca o categoría. La búsqueda se realiza primero en nuestra base de datos local
+                            y, si no se encuentran resultados, se buscará en la base de datos de OpenFoodFacts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

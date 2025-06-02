@@ -8,8 +8,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 
@@ -33,5 +33,37 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("dailySummary", dailySummary);
         return "user/profile";
+    }
+
+    @GetMapping("/edit")
+    public String showEditProfile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        User user = userService.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        model.addAttribute("user", user);
+        return "user/edit-profile";
+    }
+
+    @PostMapping("/edit")
+    public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
+                              @ModelAttribute User user,
+                              RedirectAttributes redirectAttributes) {
+        try {
+            User existingUser = userService.findByEmail(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            
+            user.setId(existingUser.getId());
+            user.setEmail(existingUser.getEmail());
+            user.setContraseñaHash(existingUser.getContraseñaHash());
+            user.setFechaCreacion(existingUser.getFechaCreacion());
+            
+            userService.updateUserProfile(user);
+            
+            redirectAttributes.addFlashAttribute("success", "Perfil actualizado correctamente");
+            return "redirect:/user/profile";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al actualizar el perfil: " + e.getMessage());
+            return "redirect:/user/edit";
+        }
     }
 } 
