@@ -31,8 +31,18 @@ public class FoodService {
     private DailySummaryService dailySummaryService;
 
     public List<Food> searchFoods(String query, String sortBy, String sortOrder, 
-                                Double minCalories, Double maxCalories) {
+                                Double minCalories, Double maxCalories, String marca) {
+        // Primero buscar en la base de datos local
         List<Food> foods = foodRepository.findByNombreContainingIgnoreCase(query);
+        
+        // Si no hay resultados, buscar en OpenFoodFacts
+        if (foods.isEmpty()) {
+            foods = openFoodFactsService.searchFoods(query);
+            // Guardar los resultados en la base de datos local
+            for (Food food : foods) {
+                foodRepository.save(food);
+            }
+        }
         
         // Aplicar filtros
         if (minCalories != null) {
@@ -44,6 +54,13 @@ public class FoodService {
         if (maxCalories != null) {
             foods = foods.stream()
                     .filter(food -> food.getCalorias100g() <= maxCalories)
+                    .collect(Collectors.toList());
+        }
+
+        if (marca != null && !marca.trim().isEmpty()) {
+            foods = foods.stream()
+                    .filter(food -> food.getMarca() != null && 
+                            food.getMarca().toLowerCase().contains(marca.toLowerCase()))
                     .collect(Collectors.toList());
         }
         
@@ -125,10 +142,40 @@ public class FoodService {
     }
 
     public Optional<Food> getFoodById(Long id) {
-        return foodRepository.findById(id);
+        Optional<Food> food = foodRepository.findById(id);
+        if (food.isEmpty()) {
+            // Si no existe en la base de datos local, intentar buscarlo en OpenFoodFacts
+            try {
+                Food openFoodFactsFood = openFoodFactsService.getFoodById(id);
+                if (openFoodFactsFood != null) {
+                    // Guardar el alimento en la base de datos local
+                    openFoodFactsFood = foodRepository.save(openFoodFactsFood);
+                    return Optional.of(openFoodFactsFood);
+                }
+            } catch (Exception e) {
+                // Si hay algún error al buscar en OpenFoodFacts, simplemente devolvemos el Optional vacío
+                return Optional.empty();
+            }
+        }
+        return food;
     }
 
     public Optional<Food> getFoodByBarcode(String barcode) {
-        return foodRepository.findByCodigoBarra(barcode);
+        Optional<Food> food = foodRepository.findByCodigoBarra(barcode);
+        if (food.isEmpty()) {
+            // Si no existe en la base de datos local, intentar buscarlo en OpenFoodFacts
+            try {
+                Food openFoodFactsFood = openFoodFactsService.getFoodByBarcode(barcode);
+                if (openFoodFactsFood != null) {
+                    // Guardar el alimento en la base de datos local
+                    openFoodFactsFood = foodRepository.save(openFoodFactsFood);
+                    return Optional.of(openFoodFactsFood);
+                }
+            } catch (Exception e) {
+                // Si hay algún error al buscar en OpenFoodFacts, simplemente devolvemos el Optional vacío
+                return Optional.empty();
+            }
+        }
+        return food;
     }
 } 

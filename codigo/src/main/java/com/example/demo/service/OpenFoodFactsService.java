@@ -74,4 +74,68 @@ public class OpenFoodFactsService {
         }
         return null;
     }
+
+    public Food getFoodById(Long id) {
+        String url = UriComponentsBuilder.fromHttpUrl(apiUrl)
+                .queryParam("id", id)
+                .queryParam("action", "process")
+                .queryParam("json", "1")
+                .build()
+                .toUriString();
+
+        try {
+            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+            List<Map<String, Object>> products = (List<Map<String, Object>>) response.get("products");
+            
+            if (products != null && !products.isEmpty()) {
+                Map<String, Object> product = products.get(0);
+                return mapProductToFood(product);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al buscar alimento por ID en OpenFoodFacts: " + e.getMessage());
+        }
+    }
+
+    public Food getFoodByBarcode(String barcode) {
+        String url = UriComponentsBuilder.fromHttpUrl(apiUrl)
+                .queryParam("code", barcode)
+                .queryParam("action", "process")
+                .queryParam("json", "1")
+                .build()
+                .toUriString();
+
+        try {
+            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+            List<Map<String, Object>> products = (List<Map<String, Object>>) response.get("products");
+            
+            if (products != null && !products.isEmpty()) {
+                Map<String, Object> product = products.get(0);
+                return mapProductToFood(product);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al buscar alimento por código de barras en OpenFoodFacts: " + e.getMessage());
+        }
+    }
+
+    private Food mapProductToFood(Map<String, Object> product) {
+        Food food = new Food();
+        food.setNombre((String) product.get("product_name"));
+        food.setMarca((String) product.get("brands"));
+        food.setCategoria((String) product.get("categories"));
+        food.setCodigoBarra((String) product.get("code"));
+        food.setFuenteDatos("OpenFoodFacts");
+
+        // Nutrientes por 100g
+        Map<String, Object> nutriments = (Map<String, Object>) product.get("nutriments");
+        if (nutriments != null) {
+            food.setCalorias100g(getDoubleValue(nutriments, "energy-kcal_100g"));
+            food.setProteinas(getDoubleValue(nutriments, "proteins_100g"));
+            food.setCarbohidratos(getDoubleValue(nutriments, "carbohydrates_100g"));
+            food.setGrasas(getDoubleValue(nutriments, "fat_100g"));
+        }
+
+        return food;
+    }
 } 

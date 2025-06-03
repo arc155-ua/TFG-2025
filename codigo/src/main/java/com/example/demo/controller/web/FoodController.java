@@ -38,9 +38,10 @@ public class FoodController {
             @RequestParam(required = false) String sortOrder,
             @RequestParam(required = false) Double minCalories,
             @RequestParam(required = false) Double maxCalories,
+            @RequestParam(required = false) String marca,
             Model model) {
         
-        List<Food> foods = foodService.searchFoods(query, sortBy, sortOrder, minCalories, maxCalories);
+        List<Food> foods = foodService.searchFoods(query, sortBy, sortOrder, minCalories, maxCalories, marca);
         
         model.addAttribute("foods", foods);
         model.addAttribute("query", query);
@@ -48,6 +49,7 @@ public class FoodController {
         model.addAttribute("sortOrder", sortOrder);
         model.addAttribute("minCalories", minCalories);
         model.addAttribute("maxCalories", maxCalories);
+        model.addAttribute("marca", marca);
         
         return "food/search-results";
     }

@@ -49,6 +49,11 @@
                             <input type="number" class="form-control" id="maxCalories" name="maxCalories" 
                                    th:value="${maxCalories}" min="0" step="0.1">
                         </div>
+                        <div class="col-md-4">
+                            <label for="marca" class="form-label">Marca</label>
+                            <input type="text" class="form-control" id="marca" name="marca" 
+                                   th:value="${marca}" placeholder="Filtrar por marca">
+                        </div>
 
                         <div class="col-12 text-end">
                             <button type="submit" class="btn btn-primary">
