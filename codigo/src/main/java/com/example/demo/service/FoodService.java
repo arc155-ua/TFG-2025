@@ -1,10 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Food;
-import com.example.demo.model.MealEntry;
+import com.example.demo.model.DailySummaryFood;
 import com.example.demo.model.User;
 import com.example.demo.repository.FoodRepository;
-import com.example.demo.repository.MealEntryRepository;
+import com.example.demo.repository.DailySummaryFoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ public class FoodService {
     private FoodRepository foodRepository;
 
     @Autowired
-    private MealEntryRepository mealEntryRepository;
+    private DailySummaryFoodRepository dailySummaryFoodRepository;
 
     @Autowired
     private OpenFoodFactsService openFoodFactsService;
@@ -110,35 +110,35 @@ public class FoodService {
     }
 
     @Transactional
-    public MealEntry addMealEntry(User user, Long foodId, Double cantidadG, String comidaTipo, String notas) {
+    public DailySummaryFood addMealEntry(User user, Long foodId, Double cantidadG, String comidaTipo, String notas) {
         Food food = foodRepository.findById(foodId)
                 .orElseThrow(() -> new RuntimeException("Alimento no encontrado"));
 
         // Calcular calorías basadas en la cantidad
         Double calorias = (food.getCalorias100g() * cantidadG) / 100.0;
 
-        MealEntry mealEntry = new MealEntry();
-        mealEntry.setUser(user);
-        mealEntry.setFood(food);
-        mealEntry.setFecha(LocalDate.now());
-        mealEntry.setComidaTipo(comidaTipo);
-        mealEntry.setCantidadG(cantidadG);
-        mealEntry.setCalorias(calorias);
-        mealEntry.setNotas(notas);
+        // Obtener o crear el resumen diario
+        var dailySummary = dailySummaryService.getOrCreateDailySummary(user, LocalDate.now());
 
-        mealEntry = mealEntryRepository.save(mealEntry);
+        // Crear la entrada de alimento
+        DailySummaryFood dailySummaryFood = new DailySummaryFood();
+        dailySummaryFood.setDailySummary(dailySummary);
+        dailySummaryFood.setFood(food);
+        dailySummaryFood.setComidaTipo(comidaTipo);
+        dailySummaryFood.setCantidadG(cantidadG);
+        dailySummaryFood.setCalorias(calorias);
+
+        // Guardar la entrada
+        dailySummaryFood = dailySummaryFoodRepository.save(dailySummaryFood);
 
         // Actualizar el resumen diario
-        dailySummaryService.updateCalories(
-            dailySummaryService.getOrCreateDailySummary(user, LocalDate.now()),
-            mealEntry.getCalorias()
-        );
+        dailySummaryService.updateCalories(dailySummary, calorias);
 
-        return mealEntry;
+        return dailySummaryFood;
     }
 
-    public List<MealEntry> getMealEntriesForDate(User user, LocalDate date) {
-        return mealEntryRepository.findByUserAndFecha(user, date);
+    public List<DailySummaryFood> getMealEntriesForDate(User user, LocalDate date) {
+        return dailySummaryFoodRepository.findByUserAndFecha(user, date);
     }
 
     public Optional<Food> getFoodById(Long id) {
@@ -177,5 +177,9 @@ public class FoodService {
             }
         }
         return food;
+    }
+
+    public List<DailySummaryFood> getDailySummaryFoodsForDate(User user, LocalDate date) {
+        return dailySummaryFoodRepository.findByUserAndFecha(user, date);
     }
 } 

@@ -3,6 +3,7 @@ CREATE SEQUENCE IF NOT EXISTS users_id_seq;
 CREATE SEQUENCE IF NOT EXISTS foods_id_seq;
 CREATE SEQUENCE IF NOT EXISTS meal_entries_id_seq;
 CREATE SEQUENCE IF NOT EXISTS daily_summary_id_seq;
+CREATE SEQUENCE IF NOT EXISTS daily_summary_foods_id_seq;
 
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS users (
@@ -56,4 +57,16 @@ CREATE TABLE IF NOT EXISTS daily_summary (
     calorias_totales DOUBLE PRECISION,
     calorias_objetivo DOUBLE PRECISION,
     FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Tabla de alimentos en resumen diario
+CREATE TABLE IF NOT EXISTS daily_summary_foods (
+    id BIGINT DEFAULT nextval('daily_summary_foods_id_seq') PRIMARY KEY,
+    daily_summary_id BIGINT NOT NULL,
+    food_id BIGINT NOT NULL,
+    cantidad_g DOUBLE PRECISION NOT NULL,
+    calorias DOUBLE PRECISION NOT NULL,
+    comida_tipo VARCHAR(50),
+    FOREIGN KEY (daily_summary_id) REFERENCES daily_summary(id),
+    FOREIGN KEY (food_id) REFERENCES foods(id)
 ); 

@@ -1,7 +1,7 @@
 package com.example.demo.controller.web;
 
 import com.example.demo.model.Food;
-import com.example.demo.model.MealEntry;
+import com.example.demo.model.DailySummaryFood;
 import com.example.demo.model.User;
 import com.example.demo.service.FoodService;
 import com.example.demo.service.UserService;
@@ -60,13 +60,13 @@ public class FoodController {
                 .orElseThrow(() -> new RuntimeException("Alimento no encontrado"));
         
         model.addAttribute("food", food);
-        model.addAttribute("mealEntry", new MealEntry());
+        model.addAttribute("dailySummaryFood", new DailySummaryFood());
         return "food/add-meal";
     }
 
     @PostMapping("/add/{foodId}")
     public String addMealEntry(@PathVariable Long foodId,
-                             @ModelAttribute MealEntry mealEntry,
+                             @ModelAttribute DailySummaryFood dailySummaryFood,
                              @AuthenticationPrincipal UserDetails userDetails,
                              RedirectAttributes redirectAttributes) {
         try {
@@ -76,13 +76,13 @@ public class FoodController {
             foodService.addMealEntry(
                 user,
                 foodId,
-                mealEntry.getCantidadG(),
-                mealEntry.getComidaTipo(),
-                mealEntry.getNotas()
+                dailySummaryFood.getCantidadG(),
+                dailySummaryFood.getComidaTipo(),
+                null
             );
 
             redirectAttributes.addFlashAttribute("success", "Comida añadida correctamente");
-            return "redirect:/user/profile";
+            return "redirect:/daily-summary/history";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al añadir la comida: " + e.getMessage());
             return "redirect:/food/add/" + foodId;
@@ -94,7 +94,7 @@ public class FoodController {
         User user = userService.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        List<MealEntry> meals = foodService.getMealEntriesForDate(user, LocalDate.now());
+        List<DailySummaryFood> meals = foodService.getDailySummaryFoodsForDate(user, LocalDate.now());
         model.addAttribute("meals", meals);
         return "food/today-meals";
     }

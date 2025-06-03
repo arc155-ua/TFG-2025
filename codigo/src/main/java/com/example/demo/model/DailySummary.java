@@ -2,15 +2,13 @@ package com.example.demo.model;
 
 import javax.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "daily_summaries")
+@Table(name = "daily_summary")
+@Data
 public class DailySummary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +22,21 @@ public class DailySummary {
     private LocalDate fecha;
 
     @Column(name = "calorias_totales")
-    private double caloriasTotales;
+    private Double caloriasTotales;
 
-    @Column(name = "calorias_meta")
-    private Integer caloriasMeta;
+    @Column(name = "calorias_objetivo")
+    private Integer caloriasObjetivo;
+
+    @OneToMany(mappedBy = "dailySummary", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<DailySummaryFood> alimentos = new ArrayList<>();
+
+    public void addAlimento(DailySummaryFood alimento) {
+        alimentos.add(alimento);
+        alimento.setDailySummary(this);
+    }
+
+    public void removeAlimento(DailySummaryFood alimento) {
+        alimentos.remove(alimento);
+        alimento.setDailySummary(null);
+    }
 } 

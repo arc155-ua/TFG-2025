@@ -20,9 +20,12 @@ com\example\demo\repository\UserRepository.class
 com\example\demo\service\DailySummaryService.class
 com\example\demo\controller\web\AuthController.class
 com\example\demo\service\AuthService.class
+com\example\demo\repository\DailySummaryFoodRepository.class
+com\example\demo\controller\web\DailySummaryController.class
 com\example\demo\dto\UserRegistrationDTO.class
 com\example\demo\repository\MealEntryRepository.class
 com\example\demo\model\User.class
 com\example\demo\dto\MealEntryDTO.class
+com\example\demo\model\DailySummaryFood.class
 com\example\demo\dto\UserLoginDTO.class
 com\example\demo\service\OpenFoodFactsService.class

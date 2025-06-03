@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title>Detalles del Resumen Diario - CalorieTracker</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Resumen del <span th:text="${#temporals.format(summary.fecha, 'dd/MM/yyyy')}">Fecha</span></h2>
+                <a th:href="@{/daily-summary/history}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Volver al Historial
+                </a>
+            </div>
+
+            <!-- Resumen de Calorías -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h5>Calorías Consumidas</h5>
+                                <h3 class="text-primary" th:text="${#numbers.formatDecimal(summary.caloriasTotales, 1, 1)}">0</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h5>Objetivo Diario</h5>
+                                <h3 class="text-success" th:text="${summary.caloriasObjetivo}">0</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h5>Progreso</h5>
+                                <div class="progress" style="height: 30px;">
+                                    <div class="progress-bar" role="progressbar" 
+                                         th:style="'width: ' + ${summary.caloriasTotales / summary.caloriasObjetivo * 100} + '%'"
+                                         th:text="${#numbers.formatDecimal(summary.caloriasTotales / summary.caloriasObjetivo * 100, 1, 1)} + '%'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Alimentos -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Alimentos Consumidos</h5>
+                </div>
+                <div class="card-body">
+                    <div th:if="${summary.alimentos == null || summary.alimentos.isEmpty()}" class="alert alert-info">
+                        No hay alimentos registrados para este día.
+                    </div>
+
+                    <div th:if="${summary.alimentos != null && !summary.alimentos.isEmpty()}" class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Alimento</th>
+                                    <th>Tipo</th>
+                                    <th>Cantidad (g)</th>
+                                    <th>Calorías</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="alimento : ${summary.alimentos}">
+                                    <td th:text="${alimento.food.nombre}">Nombre del Alimento</td>
+                                    <td th:text="${alimento.comidaTipo}">Tipo</td>
+                                    <td th:text="${#numbers.formatDecimal(alimento.cantidadG, 1, 1)}">0</td>
+                                    <td th:text="${#numbers.formatDecimal(alimento.calorias, 1, 1)}">0</td>
+                                    <td>
+                                        <form th:action="@{/daily-summary/{id}/remove-food(id=${summary.id})}" 
+                                              method="post" class="d-inline">
+                                            <input type="hidden" name="foodEntryId" th:value="${alimento.id}">
+                                            <button type="submit" class="btn btn-danger btn-sm" 
+                                                    onclick="return confirm('¿Estás seguro de que quieres eliminar este alimento?')">
+                                                <i class="bi bi-trash"></i>
+                                                Eliminar
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
