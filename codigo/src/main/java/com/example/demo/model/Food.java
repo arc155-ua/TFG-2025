@@ -22,8 +22,13 @@ public class Food {
     @Column(name = "calorias_100g")
     private Double calorias100g;
     
+    @Column(nullable = false)
     private Double grasas;
+
+    @Column(nullable = false)
     private Double proteinas;
+
+    @Column(nullable = false)
     private Double carbohidratos;
     
     @Column(name = "fuente_datos")

@@ -6,8 +6,15 @@ import com.example.demo.model.User;
 import com.example.demo.repository.FoodRepository;
 import com.example.demo.repository.DailySummaryFoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -17,6 +24,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class FoodService {
+
+    private static final Logger log = LoggerFactory.getLogger(FoodService.class);
 
     @Autowired
     private FoodRepository foodRepository;
@@ -181,5 +190,40 @@ public class FoodService {
 
     public List<DailySummaryFood> getDailySummaryFoodsForDate(User user, LocalDate date) {
         return dailySummaryFoodRepository.findByUserAndFecha(user, date);
+    }
+
+    public Food findByBarcode(String barcode) {
+        return foodRepository.findByCodigoBarra(barcode)
+                .orElse(null);
+    }
+
+    public Food searchFoodFromOpenFoodFacts(String barcode) {
+        try {
+            String url = "https://world.openfoodfacts.org/api/v0/product/" + barcode + ".json";
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            
+            if (response.getStatusCode() == HttpStatus.OK) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode root = mapper.readTree(response.getBody());
+                
+                if (root.path("status").asInt() == 1) {
+                    JsonNode product = root.path("product");
+                    
+                    Food food = new Food();
+                    food.setNombre(product.path("product_name").asText());
+                    food.setCalorias100g(product.path("nutriments").path("energy-kcal_100g").asDouble());
+                    food.setProteinas(product.path("nutriments").path("proteins_100g").asDouble());
+                    food.setCarbohidratos(product.path("nutriments").path("carbohydrates_100g").asDouble());
+                    food.setGrasas(product.path("nutriments").path("fat_100g").asDouble());
+                    food.setCodigoBarra(barcode);
+                    
+                    return foodRepository.save(food);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error al buscar alimento en Open Food Facts", e);
+        }
+        return null;
     }
 } 

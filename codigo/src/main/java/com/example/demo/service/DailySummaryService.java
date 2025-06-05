@@ -6,6 +6,7 @@ import com.example.demo.model.Food;
 import com.example.demo.model.User;
 import com.example.demo.repository.DailySummaryRepository;
 import com.example.demo.repository.DailySummaryFoodRepository;
+import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +27,21 @@ public class DailySummaryService {
     @Autowired
     private CalorieCalculatorService calorieCalculatorService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public DailySummary getOrCreateDailySummary(User user, LocalDate date) {
-        return dailySummaryRepository.findByUserAndFecha(user, date)
-                .orElseGet(() -> {
-                    DailySummary summary = new DailySummary();
-                    summary.setUser(user);
-                    summary.setFecha(date);
-                    summary.setCaloriasObjetivo(user.getCaloriasMetaDiaria());
-                    summary.setCaloriasTotales(0.0);
-                    return dailySummaryRepository.save(summary);
-                });
+        return dailySummaryRepository.findByUserIdAndFecha(user.getId(), date)
+            .orElseGet(() -> createDailySummary(user, date));
+    }
+
+    private DailySummary createDailySummary(User user, LocalDate date) {
+        DailySummary summary = new DailySummary();
+        summary.setUser(user);
+        summary.setFecha(date);
+        summary.setCaloriasObjetivo(user.getCaloriasMetaDiaria());
+        summary.setCaloriasTotales(0.0);
+        return dailySummaryRepository.save(summary);
     }
 
     @Transactional
@@ -98,5 +104,12 @@ public class DailySummaryService {
 
     public Optional<DailySummary> getDailySummaryById(Long id) {
         return dailySummaryRepository.findById(id);
+    }
+
+    public int getRemainingCalories(Long userId, LocalDate date) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        DailySummary summary = getOrCreateDailySummary(user, date);
+        return (int) (summary.getCaloriasObjetivo() - summary.getCaloriasTotales());
     }
 } 

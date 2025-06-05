@@ -26,4 +26,6 @@ public interface DailySummaryRepository extends JpaRepository<DailySummary, Long
 
     @Query("SELECT DISTINCT ds FROM DailySummary ds LEFT JOIN FETCH ds.alimentos WHERE ds.id = :id")
     Optional<DailySummary> findById(@Param("id") Long id);
+
+    Optional<DailySummary> findByUserIdAndFecha(Long userId, LocalDate fecha);
 } 
