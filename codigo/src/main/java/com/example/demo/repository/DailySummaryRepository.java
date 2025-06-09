@@ -24,6 +24,12 @@ public interface DailySummaryRepository extends JpaRepository<DailySummary, Long
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
 
+    @Query("SELECT DISTINCT ds FROM DailySummary ds LEFT JOIN FETCH ds.alimentos WHERE ds.user = :user AND ds.fecha BETWEEN :startDate AND :endDate ORDER BY ds.fecha ASC")
+    List<DailySummary> findByUserAndFechaBetweenOrderByFechaAsc(
+            @Param("user") User user,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
+
     @Query("SELECT DISTINCT ds FROM DailySummary ds LEFT JOIN FETCH ds.alimentos WHERE ds.id = :id")
     Optional<DailySummary> findById(@Param("id") Long id);
 

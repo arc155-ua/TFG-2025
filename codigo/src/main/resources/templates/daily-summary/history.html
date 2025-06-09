@@ -10,7 +10,6 @@
                 <h2>Historial de Resúmenes Diarios</h2>
             </div>
 
-            <!-- TODO arreglar el filtro de fechas -->
             <!-- Filtro de fechas -->
             <div class="card mb-4">
                 <div class="card-body">
@@ -18,12 +17,12 @@
                         <div class="col-md-4">
                             <label for="startDate" class="form-label">Fecha Inicio</label>
                             <input type="date" class="form-control" id="startDate" name="startDate" 
-                                   th:value="${startDate}">
+                                   th:value="${startDate}" max="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}">
                         </div>
                         <div class="col-md-4">
                             <label for="endDate" class="form-label">Fecha Fin</label>
                             <input type="date" class="form-control" id="endDate" name="endDate" 
-                                   th:value="${endDate}">
+                                   th:value="${endDate}" max="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}">
                         </div>
                         <div class="col-md-4 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary me-2">

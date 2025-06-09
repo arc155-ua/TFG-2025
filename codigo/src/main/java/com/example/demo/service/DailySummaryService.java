@@ -112,4 +112,9 @@ public class DailySummaryService {
         DailySummary summary = getOrCreateDailySummary(user, date);
         return (int) (summary.getCaloriasObjetivo() - summary.getCaloriasTotales());
     }
+
+    @Transactional
+    public DailySummary updateDailySummary(DailySummary summary) {
+        return dailySummaryRepository.save(summary);
+    }
 } 

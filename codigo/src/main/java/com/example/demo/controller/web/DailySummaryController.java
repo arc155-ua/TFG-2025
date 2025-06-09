@@ -36,12 +36,22 @@ public class DailySummaryController {
         User user = userService.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        List<DailySummary> summaries;
-        if (startDate != null && endDate != null) {
-            summaries = dailySummaryService.getDailySummariesForUserInDateRange(user, startDate, endDate);
-        } else {
-            summaries = dailySummaryService.getDailySummariesForUser(user);
+        // Si no se proporcionan fechas, usar el último mes por defecto
+        if (startDate == null) {
+            startDate = LocalDate.now().minusMonths(1);
         }
+        if (endDate == null) {
+            endDate = LocalDate.now();
+        }
+
+        // Validar que la fecha de inicio no sea posterior a la fecha de fin
+        if (startDate.isAfter(endDate)) {
+            LocalDate temp = startDate;
+            startDate = endDate;
+            endDate = temp;
+        }
+
+        List<DailySummary> summaries = dailySummaryService.getDailySummariesForUserInDateRange(user, startDate, endDate);
 
         model.addAttribute("summaries", summaries);
         model.addAttribute("startDate", startDate);

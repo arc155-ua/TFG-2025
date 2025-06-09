@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.User;
+import com.example.demo.model.DailySummary;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,9 @@ public class UserService {
 
     @Autowired
     private CalorieCalculatorService calorieCalculatorService;
+
+    @Autowired
+    private DailySummaryService dailySummaryService;
 
     @Transactional
     public User save(User user) {
@@ -60,7 +65,13 @@ public class UserService {
         existingUser.setObjetivo(user.getObjetivo());
         
         // Recalcular calorías meta diaria
-        existingUser.setCaloriasMetaDiaria(calorieCalculatorService.calculateCalories(existingUser, CalorieCalculatorService.Formula.MIFFLIN_ST_JEOR));
+        double nuevasCaloriasMeta = calorieCalculatorService.calculateCalories(existingUser, CalorieCalculatorService.Formula.MIFFLIN_ST_JEOR);
+        existingUser.setCaloriasMetaDiaria((int) nuevasCaloriasMeta);
+        
+        // Actualizar el resumen diario actual
+        DailySummary summaryActual = dailySummaryService.getOrCreateDailySummary(existingUser, LocalDate.now());
+        summaryActual.setCaloriasObjetivo((int) nuevasCaloriasMeta);
+        dailySummaryService.updateDailySummary(summaryActual);
         
         return userRepository.save(existingUser);
     }
