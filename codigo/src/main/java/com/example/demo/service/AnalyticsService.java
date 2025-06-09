@@ -3,10 +3,21 @@ package com.example.demo.service;
 import com.example.demo.model.DailySummary;
 import com.example.demo.model.User;
 import com.example.demo.repository.DailySummaryRepository;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -106,5 +117,94 @@ public class AnalyticsService {
         }
 
         return estadisticas;
+    }
+
+    public byte[] generarGraficoCalorias(Map<LocalDate, Double> caloriasPorDia, double caloriasObjetivo) {
+        try {
+            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+            
+            // Añadir datos de calorías consumidas
+            caloriasPorDia.forEach((fecha, calorias) -> 
+                dataset.addValue(calorias, "Calorías Consumidas", fecha.toString())
+            );
+            
+            // Añadir línea de objetivo
+            caloriasPorDia.keySet().forEach(fecha -> 
+                dataset.addValue(caloriasObjetivo, "Objetivo", fecha.toString())
+            );
+
+            // Añadir líneas de umbrales
+            caloriasPorDia.keySet().forEach(fecha -> {
+                dataset.addValue(caloriasObjetivo * 1.2, "Límite Superior", fecha.toString());
+                dataset.addValue(caloriasObjetivo * 0.8, "Límite Inferior", fecha.toString());
+            });
+
+            JFreeChart chart = ChartFactory.createLineChart(
+                "Evolución del Consumo Calórico",
+                "Fecha",
+                "Calorías",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+            );
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ChartUtils.writeChartAsPNG(outputStream, chart, 800, 400);
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Error al generar el gráfico", e);
+        }
+    }
+
+    public byte[] generarGraficoTendencia(Map<LocalDate, Double> caloriasPorDia, double caloriasObjetivo) {
+        try {
+            TimeSeriesCollection dataset = new TimeSeriesCollection();
+            
+            // Serie de calorías consumidas
+            TimeSeries seriesConsumidas = new TimeSeries("Calorías Consumidas");
+            // Serie de promedio móvil (últimos 7 días)
+            TimeSeries seriesPromedio = new TimeSeries("Promedio Móvil (7 días)");
+            
+            // Calcular promedio móvil
+            List<Double> valores = new ArrayList<>(caloriasPorDia.values());
+            for (int i = 0; i < valores.size(); i++) {
+                double suma = 0;
+                int count = 0;
+                for (int j = Math.max(0, i - 6); j <= i; j++) {
+                    suma += valores.get(j);
+                    count++;
+                }
+                double promedio = suma / count;
+                
+                LocalDate fecha = new ArrayList<>(caloriasPorDia.keySet()).get(i);
+                seriesPromedio.add(new Day(Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant())), promedio);
+            }
+            
+            // Añadir datos de calorías consumidas
+            caloriasPorDia.forEach((fecha, calorias) -> 
+                seriesConsumidas.add(new Day(Date.from(fecha.atStartOfDay(ZoneId.systemDefault()).toInstant())), calorias)
+            );
+            
+            dataset.addSeries(seriesConsumidas);
+            dataset.addSeries(seriesPromedio);
+
+            JFreeChart chart = ChartFactory.createTimeSeriesChart(
+                "Tendencia de Consumo Calórico",
+                "Fecha",
+                "Calorías",
+                dataset,
+                true,
+                true,
+                false
+            );
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ChartUtils.writeChartAsPNG(outputStream, chart, 800, 400);
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Error al generar el gráfico", e);
+        }
     }
 } 

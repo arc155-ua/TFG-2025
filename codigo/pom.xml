@@ -112,6 +112,13 @@
             <artifactId>service</artifactId>
             <version>0.18.2</version>
         </dependency>
+
+        <!-- JFreeChart -->
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.5.4</version>
+        </dependency>
     </dependencies>
     
     <build>

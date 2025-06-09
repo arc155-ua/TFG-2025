@@ -80,6 +80,28 @@
                 </div>
             </div>
 
+            <!-- Gráficos -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Evolución del Consumo Calórico</h5>
+                            <img th:src="@{/analytics/grafico-calorias(startDate=${startDate},endDate=${endDate})}" 
+                                 class="img-fluid" alt="Gráfico de calorías">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Tendencia de Consumo</h5>
+                            <img th:src="@{/analytics/grafico-tendencia(startDate=${startDate},endDate=${endDate})}" 
+                                 class="img-fluid" alt="Gráfico de tendencia">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Tabla de Calorías por Día -->
             <div class="card">
                 <div class="card-body">

@@ -5,6 +5,8 @@ import com.example.demo.service.AnalyticsService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -58,5 +60,45 @@ public class AnalyticsController {
         model.addAttribute("caloriasObjetivo", user.getCaloriasMetaDiaria());
         
         return "analytics/analisys";
+    }
+
+    @GetMapping("/grafico-calorias")
+    public ResponseEntity<byte[]> getGraficoCalorias(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        
+        User user = userService.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        if (startDate == null) startDate = LocalDate.now().minusMonths(1);
+        if (endDate == null) endDate = LocalDate.now();
+        
+        Map<LocalDate, Double> caloriasPorDia = analyticsService.getCaloriasPorDia(user, startDate, endDate);
+        byte[] grafico = analyticsService.generarGraficoCalorias(caloriasPorDia, user.getCaloriasMetaDiaria());
+        
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(grafico);
+    }
+
+    @GetMapping("/grafico-tendencia")
+    public ResponseEntity<byte[]> getGraficoTendencia(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        
+        User user = userService.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        if (startDate == null) startDate = LocalDate.now().minusMonths(1);
+        if (endDate == null) endDate = LocalDate.now();
+        
+        Map<LocalDate, Double> caloriasPorDia = analyticsService.getCaloriasPorDia(user, startDate, endDate);
+        byte[] grafico = analyticsService.generarGraficoTendencia(caloriasPorDia, user.getCaloriasMetaDiaria());
+        
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(grafico);
     }
 } 
