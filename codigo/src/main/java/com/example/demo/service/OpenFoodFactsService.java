@@ -97,28 +97,6 @@ public class OpenFoodFactsService {
         }
     }
 
-    public Food getFoodByBarcode(String barcode) {
-        String url = UriComponentsBuilder.fromHttpUrl(apiUrl)
-                .queryParam("code", barcode)
-                .queryParam("action", "process")
-                .queryParam("json", "1")
-                .build()
-                .toUriString();
-
-        try {
-            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-            List<Map<String, Object>> products = (List<Map<String, Object>>) response.get("products");
-            
-            if (products != null && !products.isEmpty()) {
-                Map<String, Object> product = products.get(0);
-                return mapProductToFood(product);
-            }
-            return null;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al buscar alimento por código de barras en OpenFoodFacts: " + e.getMessage());
-        }
-    }
-
     private Food mapProductToFood(Map<String, Object> product) {
         Food food = new Food();
         food.setNombre((String) product.get("product_name"));

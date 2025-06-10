@@ -2,7 +2,6 @@ package com.example.demo.controller.web;
 
 import com.example.demo.dto.UserLoginDTO;
 import com.example.demo.dto.UserRegistrationDTO;
-import com.example.demo.model.User;
 import com.example.demo.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

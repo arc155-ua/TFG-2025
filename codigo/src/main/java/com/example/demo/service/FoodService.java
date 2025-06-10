@@ -172,25 +172,6 @@ public class FoodService {
         return food;
     }
 
-    public Optional<Food> getFoodByBarcode(String barcode) {
-        Optional<Food> food = foodRepository.findByCodigoBarra(barcode);
-        if (food.isEmpty()) {
-            // Si no existe en la base de datos local, intentar buscarlo en OpenFoodFacts
-            try {
-                Food openFoodFactsFood = openFoodFactsService.getFoodByBarcode(barcode);
-                if (openFoodFactsFood != null) {
-                    // Guardar el alimento en la base de datos local
-                    openFoodFactsFood = foodRepository.save(openFoodFactsFood);
-                    return Optional.of(openFoodFactsFood);
-                }
-            } catch (Exception e) {
-                // Si hay algún error al buscar en OpenFoodFacts, simplemente devolvemos el Optional vacío
-                return Optional.empty();
-            }
-        }
-        return food;
-    }
-
     public List<DailySummaryFood> getDailySummaryFoodsForDate(User user, LocalDate date) {
         return dailySummaryFoodRepository.findByUserAndFecha(user, date);
     }

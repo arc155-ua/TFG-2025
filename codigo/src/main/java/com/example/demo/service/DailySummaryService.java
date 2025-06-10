@@ -27,9 +27,6 @@ public class DailySummaryService {
     private DailySummaryFoodRepository dailySummaryFoodRepository;
 
     @Autowired
-    private CalorieCalculatorService calorieCalculatorService;
-
-    @Autowired
     private UserRepository userRepository;
 
     public DailySummary getOrCreateDailySummary(User user, LocalDate date) {
