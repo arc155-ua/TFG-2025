@@ -32,6 +32,8 @@ public class UserController {
         
         model.addAttribute("user", user);
         model.addAttribute("dailySummary", dailySummary);
+        model.addAttribute("isAdmin", user.isAdmin());
+        
         return "user/profile";
     }
 

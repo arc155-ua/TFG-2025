@@ -12,6 +12,8 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
 import com.theokanning.openai.service.OpenAiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,6 +129,14 @@ public class RecipeRecommendationService {
     public Recipe getRecipeById(Long id) {
         return recipeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Receta no encontrada"));
+    }
+
+    public Page<Recipe> findAll(Pageable pageable) {
+        return recipeRepository.findAll(pageable);
+    }
+
+    public void deleteById(Long id) {
+        recipeRepository.deleteById(id);
     }
 
 } 

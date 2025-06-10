@@ -6,6 +6,8 @@ import com.example.demo.model.User;
 import com.example.demo.repository.FoodRepository;
 import com.example.demo.repository.DailySummaryFoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -225,5 +227,13 @@ public class FoodService {
             log.error("Error al buscar alimento en Open Food Facts", e);
         }
         return null;
+    }
+
+    public Page<Food> findAll(Pageable pageable) {
+        return foodRepository.findAll(pageable);
+    }
+
+    public void deleteById(Long id) {
+        foodRepository.deleteById(id);
     }
 } 

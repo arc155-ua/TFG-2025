@@ -8,6 +8,8 @@ import com.example.demo.repository.DailySummaryRepository;
 import com.example.demo.repository.DailySummaryFoodRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -116,5 +118,13 @@ public class DailySummaryService {
     @Transactional
     public DailySummary updateDailySummary(DailySummary summary) {
         return dailySummaryRepository.save(summary);
+    }
+
+    public Page<DailySummary> findAll(Pageable pageable) {
+        return dailySummaryRepository.findAll(pageable);
+    }
+
+    public void deleteById(Long id) {
+        dailySummaryRepository.deleteById(id);
     }
 } 

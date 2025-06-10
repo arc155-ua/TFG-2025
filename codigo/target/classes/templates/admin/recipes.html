@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title>Gestión de Recetas - CalorieTracker</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Gestión de Recetas</h1>
+                <a th:href="@{/admin}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver al Panel
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Calorías</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="recipe : ${recipes}">
+                                    <td th:text="${recipe.id}">1</td>
+                                    <td th:text="${recipe.name}">Receta</td>
+                                    <td th:text="${recipe.calories}">500</td>
+                                    <td>
+                                        <form th:action="@{/admin/recipes/{id}/delete(id=${recipe.id})}" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm" 
+                                                    onclick="return confirm('¿Estás seguro de que quieres eliminar esta receta?')">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Paginación -->
+                    <nav th:if="${recipes.totalPages > 1}">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${recipes.first} ? 'disabled'">
+                                <a class="page-link" th:href="@{/admin/recipes(page=${recipes.number - 1})}">Anterior</a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, recipes.totalPages - 1)}"
+                                th:classappend="${i == recipes.number} ? 'active'">
+                                <a class="page-link" th:href="@{/admin/recipes(page=${i})}" th:text="${i + 1}">1</a>
+                            </li>
+                            <li class="page-item" th:classappend="${recipes.last} ? 'disabled'">
+                                <a class="page-link" th:href="@{/admin/recipes(page=${recipes.number + 1})}">Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
