@@ -56,15 +56,15 @@ public class FoodService {
         }
         
         // Aplicar filtros
-        if (minCalories != null) {
+        if (minCalories != null && minCalories > 0) {
             foods = foods.stream()
-                    .filter(food -> food.getCalorias100g() >= minCalories)
+                    .filter(food -> food.getCalorias100g() != null && food.getCalorias100g() >= minCalories)
                     .collect(Collectors.toList());
         }
         
-        if (maxCalories != null) {
+        if (maxCalories != null && maxCalories > 0) {
             foods = foods.stream()
-                    .filter(food -> food.getCalorias100g() <= maxCalories)
+                    .filter(food -> food.getCalorias100g() != null && food.getCalorias100g() <= maxCalories)
                     .collect(Collectors.toList());
         }
 
@@ -91,22 +91,23 @@ public class FoodService {
         Comparator<Food> comparator;
         switch (sortBy.toLowerCase()) {
             case "calorias":
-                comparator = Comparator.comparing(Food::getCalorias100g);
+            case "calorias100g":
+                comparator = Comparator.comparing(food -> food.getCalorias100g() != null ? food.getCalorias100g() : 0.0);
                 break;
             case "proteinas":
-                comparator = Comparator.comparing(Food::getProteinas);
+                comparator = Comparator.comparing(food -> food.getProteinas() != null ? food.getProteinas() : 0.0);
                 break;
             case "carbohidratos":
-                comparator = Comparator.comparing(Food::getCarbohidratos);
+                comparator = Comparator.comparing(food -> food.getCarbohidratos() != null ? food.getCarbohidratos() : 0.0);
                 break;
             case "grasas":
-                comparator = Comparator.comparing(Food::getGrasas);
+                comparator = Comparator.comparing(food -> food.getGrasas() != null ? food.getGrasas() : 0.0);
                 break;
             case "nombre":
-                comparator = Comparator.comparing(Food::getNombre);
+                comparator = Comparator.comparing(food -> food.getNombre() != null ? food.getNombre() : "");
                 break;
             default:
-                comparator = Comparator.comparing(Food::getNombre);
+                comparator = Comparator.comparing(food -> food.getNombre() != null ? food.getNombre() : "");
         }
         return comparator;
     }
