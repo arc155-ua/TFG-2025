@@ -83,35 +83,5 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal para consumir la receta -->
-    <div class="modal fade" id="consumeModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Consumir Receta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <form th:action="@{/recipes/{id}/consume(id=${recipe.id})}" method="post">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="comidaTipo" class="form-label">Tipo de Comida</label>
-                            <select class="form-select" id="comidaTipo" name="comidaTipo" required>
-                                <option value="DESAYUNO">Desayuno</option>
-                                <option value="ALMUERZO">Almuerzo</option>
-                                <option value="COMIDA">Comida</option>
-                                <option value="MERIENDA">Merienda</option>
-                                <option value="CENA">Cena</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Consumir</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 </body>
 </html> 
