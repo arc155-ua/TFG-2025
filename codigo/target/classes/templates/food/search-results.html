@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title>Resultados de Búsqueda - CalorieTracker</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Resultados de Búsqueda</h2>
+                <a th:href="@{/food/search}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Nueva Búsqueda
+                </a>
+            </div>
+
+            <!-- Filtros y Ordenación -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form th:action="@{/food/search/results}" method="get" class="row g-3">
+                        <input type="hidden" name="query" th:value="${query}">
+                        
+                        <!-- Ordenación -->
+                        <div class="col-md-4">
+                            <label for="sortBy" class="form-label">Ordenar por</label>
+                            <select name="sortBy" id="sortBy" class="form-select">
+                                <option value="nombre" th:selected="${sortBy == 'nombre'}">Nombre</option>
+                                <option value="calorias100g" th:selected="${sortBy == 'calorias100g'}">Calorías</option>
+                                <option value="proteinas" th:selected="${sortBy == 'proteinas'}">Proteínas</option>
+                                <option value="carbohidratos" th:selected="${sortBy == 'carbohidratos'}">Carbohidratos</option>
+                                <option value="grasas" th:selected="${sortBy == 'grasas'}">Grasas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="sortOrder" class="form-label">Orden</label>
+                            <select name="sortOrder" id="sortOrder" class="form-select">
+                                <option value="asc" th:selected="${sortOrder == 'asc'}">Ascendente</option>
+                                <option value="desc" th:selected="${sortOrder == 'desc'}">Descendente</option>
+                            </select>
+                        </div>
+
+                        <!-- Filtros -->
+                        <div class="col-md-2">
+                            <label for="minCalories" class="form-label">Calorías mínimas</label>
+                            <input type="number" class="form-control" id="minCalories" name="minCalories" 
+                                   th:value="${minCalories}" min="0" step="0.1">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="maxCalories" class="form-label">Calorías máximas</label>
+                            <input type="number" class="form-control" id="maxCalories" name="maxCalories" 
+                                   th:value="${maxCalories}" min="0" step="0.1">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="marca" class="form-label">Marca</label>
+                            <input type="text" class="form-control" id="marca" name="marca" 
+                                   th:value="${marca}" placeholder="Filtrar por marca">
+                        </div>
+
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-funnel"></i> Aplicar Filtros
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div th:if="${foods.empty}" class="alert alert-info">
+                No se encontraron resultados para "<span th:text="${query}"></span>"
+            </div>
+
+            <div th:if="${!foods.empty}" class="row">
+                <div th:each="food : ${foods}" class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${food.nombre}">Nombre del Alimento</h5>
+                            <p class="card-text" th:if="${food.marca}" th:text="${'Marca: ' + food.marca}">Marca</p>
+                            <p class="card-text" th:if="${food.categoria}" th:text="${'Categoría: ' + food.categoria}">Categoría</p>
+                            
+                            <div class="mt-3">
+                                <h6>Información Nutricional (por 100g)</h6>
+                                <ul class="list-unstyled">
+                                    <li th:if="${food.calorias100g != null}">
+                                        <strong>Calorías:</strong> <span th:text="${#numbers.formatDecimal(food.calorias100g, 1, 1)}">0</span> kcal
+                                    </li>
+                                    <li th:if="${food.proteinas != null}">
+                                        <strong>Proteínas:</strong> <span th:text="${#numbers.formatDecimal(food.proteinas, 1, 1)}">0</span>g
+                                    </li>
+                                    <li th:if="${food.carbohidratos != null}">
+                                        <strong>Carbohidratos:</strong> <span th:text="${#numbers.formatDecimal(food.carbohidratos, 1, 1)}">0</span>g
+                                    </li>
+                                    <li th:if="${food.grasas != null}">
+                                        <strong>Grasas:</strong> <span th:text="${#numbers.formatDecimal(food.grasas, 1, 1)}">0</span>g
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a th:href="@{/food/add/{id}(id=${food.id})}" class="btn btn-primary w-100">
+                                <i class="bi bi-plus-circle"></i> Añadir a mi diario
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

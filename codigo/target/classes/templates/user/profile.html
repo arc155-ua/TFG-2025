@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.springframework.org/security/tags" layout:decorate="~{layout/base}">
+<head>
+    <title>Mi Perfil - CalorieTracker</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="profile-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 th:text="${user.nombre}">Nombre del Usuario</h1>
+                    <p class="text-muted" th:text="${user.email}">email@ejemplo.com</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a th:href="@{/user/edit}" class="btn btn-outline-primary me-2">Editar Perfil</a>
+                    <a th:if="${isAdmin}" th:href="@{/admin}" class="btn btn-outline-dark me-2">
+                        <i class="bi bi-shield-lock"></i> Panel de Administración
+                    </a>
+                    <form th:action="@{/logout}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Información Personal</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Edad:</strong> <span th:text="${user.edad}">-</span> años</p>
+                        <p><strong>Género:</strong> <span th:text="${user.genero}">-</span></p>
+                        <p><strong>Altura:</strong> <span th:text="${user.alturaCm}">-</span> cm</p>
+                        <p><strong>Peso:</strong> <span th:text="${user.pesoKg}">-</span> kg</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Objetivos</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Objetivo:</strong> <span th:text="${user.objetivo}">-</span></p>
+                        <p><strong>Nivel de Actividad:</strong> <span th:text="${user.nivelActividad}">-</span></p>
+                        <p><strong>Calorías Diarias:</strong> <span th:text="${user.caloriasMetaDiaria}">-</span> kcal</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Resumen del Día</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <h6>Calorías Consumidas</h6>
+                                    <h3 th:text="${dailySummary?.caloriasTotales ?: 0}">0</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <h6>Calorías Restantes</h6>
+                                    <h3 th:text="${dailySummary?.caloriasTotales != null ? (user.caloriasMetaDiaria - dailySummary.caloriasTotales) : user.caloriasMetaDiaria}">0</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <h6>Meta Diaria</h6>
+                                    <h3 th:text="${user.caloriasMetaDiaria}">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

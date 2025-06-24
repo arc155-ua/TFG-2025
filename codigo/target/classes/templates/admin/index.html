@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title>Panel de Administración - CalorieTracker</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <h1 class="mb-4">Panel de Administración</h1>
+            
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Usuarios</h5>
+                            <p class="card-text">Gestionar usuarios del sistema</p>
+                            <a th:href="@{/admin/users}" class="btn btn-primary">Ver Usuarios</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Resúmenes Diarios</h5>
+                            <p class="card-text">Ver todos los resúmenes diarios</p>
+                            <a th:href="@{/admin/daily-summaries}" class="btn btn-primary">Ver Resúmenes</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Recetas</h5>
+                            <p class="card-text">Gestionar recetas del sistema</p>
+                            <a th:href="@{/admin/recipes}" class="btn btn-primary">Ver Recetas</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Alimentos</h5>
+                            <p class="card-text">Gestionar alimentos del sistema</p>
+                            <a th:href="@{/admin/foods}" class="btn btn-primary">Ver Alimentos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

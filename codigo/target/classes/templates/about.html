@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/base}">
+<head>
+    <title>Acerca de - CalorieTracker</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container mt-4">
+            <!-- Hero Section -->
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h1 class="display-4 mb-3">Acerca de CalorieTracker</h1>
+                    <p class="lead text-muted">Tu compañero en el camino hacia una vida más saludable</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <!-- ¿Qué es CalorieTracker? -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="card-title h3 mb-4">
+                                <i class="bi bi-info-circle-fill text-primary me-2"></i>
+                                ¿Qué es CalorieTracker?
+                            </h2>
+                            <p class="card-text">
+                                CalorieTracker es una aplicación web diseñada para ayudarte a mantener un registro de tu ingesta calórica diaria
+                                y alcanzar tus objetivos de salud y fitness. Nuestra plataforma te permite:
+                            </p>
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-3">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                            Registrar y hacer seguimiento de tus comidas diarias
+                                        </li>
+                                        <li class="mb-3">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                            Buscar alimentos y sus valores nutricionales
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-3">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                            Establecer y monitorear tus objetivos de calorías
+                                        </li>
+                                        <li class="mb-3">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                            Visualizar tu progreso a lo largo del tiempo
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Características Principales -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="card-title h3 mb-4">
+                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                Características Principales
+                            </h2>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-database-fill text-primary fs-4 me-3"></i>
+                                        <div>
+                                            <h5 class="mb-2">Base de Datos Completa</h5>
+                                            <p class="text-muted mb-0">Extensa base de datos de alimentos con información nutricional detallada y precisa.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-calculator-fill text-success fs-4 me-3"></i>
+                                        <div>
+                                            <h5 class="mb-2">Cálculos Automáticos</h5>
+                                            <p class="text-muted mb-0">Cálculo automático de calorías basado en tus características personales y objetivos.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-laptop text-info fs-4 me-3"></i>
+                                        <div>
+                                            <h5 class="mb-2">Interfaz Intuitiva</h5>
+                                            <p class="text-muted mb-0">Diseño moderno y fácil de usar que hace el seguimiento de tu dieta más sencillo.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-shield-lock-fill text-danger fs-4 me-3"></i>
+                                        <div>
+                                            <h5 class="mb-2">Seguridad Garantizada</h5>
+                                            <p class="text-muted mb-0">Tus datos están seguros y protegidos con las últimas medidas de seguridad.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nuestra Misión -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="card-title h3 mb-4">
+                                <i class="bi bi-heart-fill text-danger me-2"></i>
+                                Nuestra Misión
+                            </h2>
+                            <p class="card-text">
+                                Nuestro objetivo es proporcionar una herramienta fácil de usar que ayude a las personas
+                                a tomar el control de su salud y bienestar a través de una mejor comprensión de su
+                                nutrición y hábitos alimenticios.
+                            </p>
+                            <div class="row mt-4">
+                                <div class="col-md-4 text-center mb-3">
+                                    <i class="bi bi-people-fill text-primary fs-1"></i>
+                                    <h5 class="mt-2">Comunidad</h5>
+                                    <p class="text-muted small">Apoyando a miles de usuarios en su viaje hacia una vida más saludable</p>
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <i class="bi bi-graph-up text-success fs-1"></i>
+                                    <h5 class="mt-2">Progreso</h5>
+                                    <p class="text-muted small">Ayudando a nuestros usuarios a alcanzar sus objetivos de salud</p>
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <i class="bi bi-lightning-charge-fill text-warning fs-1"></i>
+                                    <h5 class="mt-2">Innovación</h5>
+                                    <p class="text-muted small">Continuamente mejorando y añadiendo nuevas características</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contacto -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="card-title h3 mb-4">
+                                <i class="bi bi-envelope-fill text-primary me-2"></i>
+                                Contacto
+                            </h2>
+                            <p class="card-text">
+                                ¿Tienes alguna pregunta o sugerencia? No dudes en contactarnos.
+                            </p>
+                            <div class="d-flex justify-content-center mt-4">
+                                <a href="mailto:arc155@calorietracker.com" class="btn btn-primary me-3">
+                                    <i class="bi bi-envelope me-2"></i>Contactar
+                                </a>
+                                <a href="https://github.com/arc155-ua" class="btn btn-outline-dark" target="_blank">
+                                    <i class="bi bi-github me-2"></i>GitHub
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
